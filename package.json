@@ -3,6 +3,7 @@
 	"displayName": "s21lint-vscode",
 	"description": "s21lint integration for VSCode",
 	"version": "0.1.0",
+	"publisher": "bgenia",
 	"engines": {
 		"vscode": "^1.88.0"
 	},
@@ -34,8 +35,8 @@
 		"lint": "biome check .",
 		"lint:fix": "biome check --apply .",
 		"test": "vscode-test",
-		"package": "pnpm vsce package --no-dependencies",
-		"publish": "pnpm vsce publish --no-dependencies"
+		"extension:package": "pnpm vsce package --no-dependencies",
+		"extension:publish": "pnpm vsce publish --no-dependencies"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "^1.6.4",
