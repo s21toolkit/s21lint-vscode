@@ -1,0 +1,48 @@
+{
+	"name": "s21lint-vscode",
+	"displayName": "s21lint-vscode",
+	"description": "s21lint integration for VSCode",
+	"version": "0.1.0",
+	"engines": {
+		"vscode": "^1.88.0"
+	},
+	"categories": [
+		"Other"
+	],
+	"activationEvents": [
+		"onLanguage:cpp",
+		"onLanguage:c"
+	],
+	"main": "./out/extension.js",
+	"contributes": {
+		"commands": [
+			{
+				"command": "s21lint-vscode.helloWorld",
+				"title": "Hello World"
+			}
+		]
+	},
+	"scripts": {
+		"vscode:prepublish": "pnpm run compile",
+		"compile": "tsup",
+		"watch": "tsup --watch",
+		"pretest": "pnpm run compile && pnpm run lint",
+		"lint": "biome check .",
+		"lint:fix": "biome check --apply .",
+		"test": "vscode-test"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "^1.6.4",
+		"@tsconfig/strictest": "^2.0.5",
+		"@types/mocha": "^10.0.6",
+		"@types/node": "18.x",
+		"@types/vscode": "^1.88.0",
+		"@vscode/test-cli": "^0.0.8",
+		"@vscode/test-electron": "^2.3.9",
+		"tsup": "^8.0.2",
+		"typescript": "^5.3.3"
+	},
+	"dependencies": {
+		"@s21toolkit/lint": "1.1.1"
+	}
+}
