@@ -4,6 +4,10 @@ All notable changes to the "s21lint-vscode" extension will be documented in this
 
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
-## [Unreleased]
+## 0.4.0
 
-- Initial release
+- Implemented incremental parsing/linting on document change instead of on document save.
+
+## 0.3.0
+
+First working version.
