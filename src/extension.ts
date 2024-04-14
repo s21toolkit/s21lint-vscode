@@ -147,4 +147,15 @@ export async function activate(context: vscode.ExtensionContext) {
 		lintDocument(event.document)
 		reportDocumentDiagnostics(event.document)
 	})
+
+	// Lint all visible editors on activation
+	for (const editor of vscode.window.visibleTextEditors) {
+		if (!isAllowedDocument(editor.document)) {
+			continue
+		}
+
+		parseDocument(editor.document)
+		lintDocument(editor.document)
+		reportDocumentDiagnostics(editor.document)
+	}
 }
