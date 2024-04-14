@@ -37,8 +37,6 @@ export async function activate(context: vscode.ExtensionContext) {
 		}
 
 		linter.checkProgram(program, document.fileName)
-
-		return linter.getFileDiagnostics(document.fileName)
 	}
 
 	function disposeDocument(document: vscode.TextDocument) {
@@ -92,17 +90,61 @@ export async function activate(context: vscode.ExtensionContext) {
 		reportDocumentDiagnostics(editor.document)
 	})
 
-	vscode.workspace.onDidSaveTextDocument((document) => {
-		if (!isAllowedDocument(document)) {
+	vscode.workspace.onDidCloseTextDocument((document) => {
+		disposeDocument(document)
+	})
+
+	vscode.workspace.onDidChangeTextDocument((event) => {
+		if (!isAllowedDocument(event.document)) {
 			return
 		}
 
-		parseDocument(document)
-		lintDocument(document)
-		reportDocumentDiagnostics(document)
-	})
+		const program = programs.get(event.document.fileName)
 
-	vscode.workspace.onDidCloseTextDocument((document) => {
-		disposeDocument(document)
+		// If the document has not been parsed yet, simply parse it and lint it
+		if (!program) {
+			parseDocument(event.document)
+			lintDocument(event.document)
+			reportDocumentDiagnostics(event.document)
+
+			return
+		}
+
+		// Otherwise, we need to update the tree based on the document changes to perform incremental parsing
+
+		// Iterate over document edits from the end of the document (default ordering)
+		for (const change of event.contentChanges) {
+			const oldEndIndex = change.rangeOffset + change.rangeLength
+
+			const newEndIndex = change.rangeOffset + change.text.length
+			const newEndPosition = event.document.positionAt(newEndIndex)
+
+			// Convert vscode changes to tree sitter edits and apply them to the tree to update node positions
+			program.edit({
+				startIndex: change.rangeOffset,
+				startPosition: {
+					row: change.range.start.line,
+					column: change.range.start.character,
+				},
+				oldEndIndex,
+				oldEndPosition: {
+					row: change.range.end.line,
+					column: change.range.end.character,
+				},
+				newEndIndex,
+				newEndPosition: {
+					row: newEndPosition.line,
+					column: newEndPosition.character,
+				},
+			})
+		}
+
+		// Reparse the document with the updated tree
+		const newProgram = parser.parse(event.document.getText(), program)
+
+		programs.set(event.document.fileName, newProgram)
+
+		lintDocument(event.document)
+		reportDocumentDiagnostics(event.document)
 	})
 }
