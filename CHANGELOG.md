@@ -4,6 +4,11 @@ All notable changes to the "s21lint-vscode" extension will be documented in this
 
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
+## 1.0.1
+
+- Updated dependencies
+- Downgraded supported VSCode version to 1.82.0
+
 ## 1.0.0
 
 - Implemented linting all visible editors on startup.
