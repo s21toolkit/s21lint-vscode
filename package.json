@@ -2,7 +2,7 @@
 	"name": "s21lint-vscode",
 	"displayName": "s21lint-vscode",
 	"description": "s21lint integration for VSCode",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"publisher": "bgenia",
 	"engines": {
 		"vscode": "^1.82.0"
